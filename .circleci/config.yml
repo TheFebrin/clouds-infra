@@ -1,0 +1,60 @@
+version: 2.1
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.6.1
+  cloudrun: circleci/gcp-cloud-run@1.0.0
+jobs:
+  Run-Tests:
+    docker:
+      - image: circleci/python:3.10.1
+    steps:
+      - checkout
+      - run:
+          name: Run Tests
+          command: |
+            pip install -r kubernetes/website_with_db/db_read/requirements.txt
+            cd kubernetes/website_with_db/ && pytest
+  Build-Docker:
+    # working_directory: /app
+    docker:
+      # - image: docker:17.05.0-ce-git
+      - image: circleci/python:3.10.1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Extract GCP key
+          command: |
+            echo ${GCP_PROJECT_KEY} | base64 -d > $HOME/gcloud-service-key.json
+            echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
+      - gcp-gcr/gcr-auth:
+          gcloud-service-key: GOOGLE_CLOUD_KEYS
+          google-project-id: GOOGLE_PROJECT_ID
+          google-compute-zone: GOOGLE_COMPUTE_ZONE
+      - run:
+          name: Show gcloud config
+          command: |
+            gcloud auth list
+            gcloud projects list
+            gcloud config configurations list
+      - run:
+          name: Build docker image
+          command: |
+            cd kubernetes/website_with_db/ && docker build db_read/. --tag db-read
+      - run:
+          name: Tag docker image
+          command: |
+            docker tag db-read:latest gcr.io/chmurki-329715/db-read:latest
+      - run:
+          name: Push docker image
+          command: |
+            ls
+            pwd
+            docker push gcr.io/chmurki-329715/db-read:latest
+
+workflows:
+  Example_Workflow:
+    jobs:
+      - Run-Tests
+      - Build-Docker:
+          requires:
+            - Run-Tests
