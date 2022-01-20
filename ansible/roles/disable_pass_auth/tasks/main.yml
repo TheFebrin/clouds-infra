@@ -1,0 +1,11 @@
+---
+# tasks file for disable_pass_auth
+
+- name: Disable PasswordAuthentication
+  replace: 
+    path: '/etc/ssh/sshd_config'
+    regexp: "#PasswordAuthentication yes"
+    replace: "PasswordAuthentication no"
+  notify:
+    - Restart SSH
+  tags: [http-server]

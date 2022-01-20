@@ -1,0 +1,11 @@
+FROM nginx:latest
+
+RUN rm /usr/share/nginx/html/*
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+ADD default.conf /etc/nginx/conf.d/
+
+ADD website.tar.gz /usr/share/nginx/html/
+
+RUN mv /usr/share/nginx/html/website/* /usr/share/nginx/html/

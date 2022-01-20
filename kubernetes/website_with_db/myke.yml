@@ -1,0 +1,21 @@
+---
+project: website-with-db
+desc: build containers
+tasks:
+  read-build:
+    cmd: docker build db_read/. --tag db-read
+
+  read-run:
+    cmd: docker run --rm --name db-read -p 2137:2137 -d -e GOOGLE_APPLICATION_CREDENTIALS --env-file db_read/.env db-read:latest
+
+  write-build:
+    cmd: docker build db_write/. --tag db-write
+
+  write-run:
+    cmd: docker run --rm --name db-write -p 2138:2138 -d -e GOOGLE_APPLICATION_CREDENTIALS --env-file db_write/.env db-write:latest
+
+  website-build:
+    cmd: docker build website/. --tag website
+
+  website-run:
+    cmd: docker run --rm --name website -p 3000:3000 -d website:latest

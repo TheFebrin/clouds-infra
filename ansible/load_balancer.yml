@@ -1,0 +1,10 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create haproxy config
+      include_role:
+        name: haproxy_config
+
+    - name: Configure load balancer
+      include_role:
+        name: load_balancer

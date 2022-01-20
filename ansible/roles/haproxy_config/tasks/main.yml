@@ -1,0 +1,19 @@
+---
+# tasks file for haproxy_config
+
+- name: Copy template_haproxy.cfg to haproxy.cfg
+  copy:
+    src: 'template_haproxy.cfg'
+    dest: 'haproxy.cfg'
+  tags: [haproxy-config, load-balancer]
+
+- name: Add servers IPs to the config
+  lineinfile:
+    path: 'haproxy.cfg'
+    regexp: '^backend myservers '
+    insertafter: '^#backend myservers '
+    line: "server server{{ idx + 1 }} {{ item }}"
+  loop: "{{ groups['nginx_servers'] }}"
+  loop_control:
+    index_var: idx
+  tags: [haproxy-config, load-balancer]

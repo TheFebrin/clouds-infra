@@ -1,0 +1,10 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Setting up nginx
+      include_role:
+        name: nginx_server
+
+    - name: Uploading website contents
+      include_role:
+        name: website

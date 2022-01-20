@@ -1,0 +1,5 @@
+plugin: gcp_compute
+projects:
+  - chmurki-329715
+auth_kind: serviceaccount
+service_account_file: ~/sa-private-key.json

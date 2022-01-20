@@ -1,0 +1,17 @@
+---
+# tasks file for website
+
+- name: Ensure rsync is installed
+  apt:
+    name: rsync
+    state: present
+  tags: [website]
+
+- name: Upload website contents
+  # become_method: sudo
+  synchronize:
+    src: http_server/
+    dest: /opt/html
+    # rsync_opts: --chown=www-data  Note: there is no --chown flag on MacOS
+    delete: yes
+  tags: [website]

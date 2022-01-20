@@ -1,0 +1,17 @@
+---
+# tasks file for enable_banner
+
+- name: Copy Banner
+  copy:
+    src: banner.txt
+    dest: /etc/banner.txt
+  tags: [http-server]
+
+- name: Enable Banner
+  replace:
+    path: '/etc/ssh/sshd_config'
+    regexp: "#Banner none"
+    replace: "Banner /etc/banner.txt"
+  notify:
+  - Restart SSH
+  tags: [http-server]

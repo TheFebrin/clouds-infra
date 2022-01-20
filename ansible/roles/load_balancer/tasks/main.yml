@@ -1,0 +1,22 @@
+---
+# tasks file for load_balancer
+
+- name: Ensure apache is not installed
+  apt:
+    name: apache2
+    state: absent
+  tags: [load-balancer]
+
+- name: Ensure haproxy is installed
+  package:
+    name: haproxy
+    state: present
+  tags: [load-balancer]
+
+- name: "Copying haproxy configuration file"
+  template:
+    src: "haproxy.cfg"
+    dest: "/etc/haproxy/haproxy.cfg"
+  notify:
+   - Restart Haproxy
+  tags: [load-balancer]

@@ -1,0 +1,18 @@
+---
+project: nginx
+desc: build nginx docker
+tasks:
+  nginx-build:
+    cmd: docker build . -f Dockerfile.nginx --tag nginx
+
+  nginx-run:
+    cmd: docker run --rm --name nginx --net frontend --ip 10.0.1.2 -d nginx:latest
+
+  nginx-run2:
+    cmd: docker run --rm --name nginx2 --net frontend --ip 10.0.1.3 -d nginx:latest
+
+  nginx-start:
+    cmd: docker start nginx
+
+  nginx-clear:
+    cmd: docker kill nginx

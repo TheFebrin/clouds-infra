@@ -1,0 +1,21 @@
+- hosts: all
+  become: yes
+  vars:
+    # SQL
+    db_name: wordpress
+    db_user: wordpress
+    db_password: wordpress
+    db_host: 34.133.138.163
+    # HTTP
+    http_host_ip: 34.134.7.181
+    http_host_ip_full: 181.7.134.34.bc.googleusercontent.com
+    http_host: wordpress
+    http_conf: wordpress.conf
+    http_port: 80
+  vars_files:
+    - roles/wordpress/vars/main.yml
+  tasks:
+    - name: Configure wordpress server
+      include_role:
+        name: wordpress
+      tags: [wordpress]

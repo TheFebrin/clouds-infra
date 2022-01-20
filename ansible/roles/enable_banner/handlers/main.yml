@@ -1,0 +1,7 @@
+---
+# handlers file for enable_banner
+
+- name: Restart SSH
+  service:
+    name: ssh
+    state: restarted

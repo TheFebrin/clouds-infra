@@ -1,0 +1,12 @@
+---
+project: haproxy
+desc: build nxinx docker
+tasks:
+  haproxy-build:
+    cmd: docker build . -f Dockerfile.haproxy --tag haproxy
+
+  haproxy-run:
+    cmd: docker run --rm --name haproxy --net frontend --ip 10.0.1.1 -p 2137:2137 -d haproxy:latest
+
+  haproxy-clear:
+    cmd: docker kill haproxy

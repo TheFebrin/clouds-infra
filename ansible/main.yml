@@ -1,0 +1,96 @@
+- hosts: nginx_servers
+  become: yes
+  tasks:
+    - name: Setting up nginx
+      include_role:
+        name: nginx_server
+      tags: [http-server]
+
+    - name: Uploading website contents
+      include_role:
+        name: website
+      tags: [http-server, website]
+
+    - name: Disable password authentication
+      include_role:
+        name: disable_pass_auth
+      tags: [http-server, website]
+
+    - name: Enable banner
+      include_role:
+        name: enable_banner
+      tags: [http-server, website]
+
+    - name: Upload cronjob for saving logs to GCS
+      include_role:
+        name: cronjob
+      tags: [http-server, website]
+
+- hosts: localhost
+  tasks:
+    - name: Create haproxy config
+      include_role:
+        name: haproxy_config
+      tags: [load-balancer, haproxy-config]
+
+- hosts: load_balancer
+  become: yes
+  tasks:
+    - name: Configure load balancer
+      include_role:
+        name: load_balancer
+      tags: [load-balancer]
+
+    - name: Disable password authentication  # TODO: add this tag inside of the role
+      include_role:
+        name: disable_pass_auth
+      tags: [load-balancer]
+
+    - name: Enable banner
+      include_role:
+        name: enable_banner
+      tags: [load-balancer]
+
+    - name: Upload cronjob for saving logs to GCS
+      include_role:
+        name: cronjob
+      tags: [load-balancer]
+
+
+- hosts: wordpress
+  become: yes
+  vars:
+    # SQL
+    db_name: wordpress
+    db_user: wordpress
+    db_password: wordpress
+    db_host: 34.133.138.163
+    # HTTP
+    http_host_ip: 34.134.7.181
+    http_host_ip_full: 181.7.134.34.bc.googleusercontent.com
+    http_host: wordpress
+    http_conf: wordpress.conf
+    http_port: 80
+  vars_files:
+    - roles/wordpress/vars/main.yml
+
+  tasks:
+    - name: Configure wordpress server
+      include_role:
+        name: wordpress
+      tags: [wordpress]
+
+    - name: Disable password authentication
+      include_role:
+        name: disable_pass_auth
+      tags: [wordpress]
+
+    - name: Enable banner
+      include_role:
+        name: enable_banner
+      tags: [wordpress]
+
+    - name: Upload cronjob for saving logs to GCS
+      include_role:
+        name: cronjob
+      tags: [wordpress]

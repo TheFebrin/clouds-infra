@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- Page setup -->
+    <meta charset="utf-8">
+    <title>Cloud Website</title>
+    <meta name="description" content="A brief description of your site for search engines">
+    <meta name="author" content="Information about the author here">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+
+    <!-- Stylesheets -->
+    <!-- Reset default styles and add support for google fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" />
+
+    <!-- Custom styles -->
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/style.css') }}">
+
+  </head>
+
+  <style>
+    .content {
+      max-width: 500px;
+      margin: auto;
+    }
+  </style>
+
+  <body>
+
+    <div class="content">
+      <header id="header">
+        <!-- <img src="{{url_for('static', filename='logo2.png')}}" /> -->
+        <p style="text-align:center">
+          <img alt="Logo" src="https://storage.googleapis.com/wiadro-culumbus/flask_server/logo.png?x-goog-signature=14cdddf7bdad7754a1ea0ff84e779ca3b6f1a86c5cf6736e557d0b0e8c260429f9a5cc18f38c41f070552a6ece3d42784cef12b22403935cff6f0b4931d0e772a574eb7eb9d4e84a53779524ba4203923c102bf275d73b5f0e8b3fa44433fe61561263adedf1361c5d72c47c2747a5612deebe9894429de5510f8841fb4324a315cbdde2356155a597a1924335c3a8a40bb79bb5d408ebe3fc70fe976180996e16fcf288478d8aae663f9d6742bf47a2f97bc3696f66030c9b17323a3cd431b310a259d503b4034382dd1de6316f7c45bdcd3ab6c5c250c4138658b0f527dda2393c3acadcaf756611a2a185844294f8756795a8cfebee5e59a15c8efb341675&x-goog-algorithm=GOOG4-RSA-SHA256&x-goog-credential=350899304850-compute%40developer.gserviceaccount.com%2F20211023%2Feu%2Fstorage%2Fgoog4_request&x-goog-date=20211023T230212Z&x-goog-expires=604800&x-goog-signedheaders=host">
+        </p>
+        <h1 style="text-align:center">Simple Cloud Website</h1>
+      </header>
+
+      <div id="container">
+        <div class="inner">
+          <div id="content">
+
+            <div id="home" class="content-region hide">
+
+              <form style="text-align:center" method="POST">
+                <h3 style="text-align:center"> Click Button! </h3>
+                <button style="text-align:center" type="submit" name="counter_button" class="btn btn-primary" value="abc">Click</button>
+              </form>
+              <p style="text-align:center"> Button clicked: {{ n_button_clicks }} times </p>
+
+              <h3>Random quote:</h3>
+              <p style="text-align:center" > {{ random_quote }}</p>
+
+              <h3> Another image </h3>
+              <p style="text-align:center">
+                <img alt="Logo" src="http://127.0.0.1:5000/image">
+              </p>
+            </div>
+
+      <!-- Load additional JS scripts here -->
+      <script src="{{url_for('static', filename='script.js')}}"></script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+---
+project: web-app
+desc: build web-app docker
+tasks:
+  build:
+    cmd: docker build . --tag web-app
+
+  run:
+    cmd: docker run --rm --name web-app -p 80:5000 -d -e DEV web-app:latest
+
+  start:
+    cmd: docker start web-app
+
+  clear:
+    cmd: docker kill web-app && docker rm web-app
+
+  deploy:
+    cmd: ssh dawid.dieu@34.159.186.99 < deploy.sh  
+
+  build-to-hub:
+    cmd: docker build . --tag thefebrin/clouds:latest
+
+  push-to-hub:
+    cmd: docker push thefebrin/clouds:latest

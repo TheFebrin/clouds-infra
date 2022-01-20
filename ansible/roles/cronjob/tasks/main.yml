@@ -1,0 +1,17 @@
+---
+# tasks file for cronjob
+
+- name: Upload cronjob script
+  copy:
+    src: upload_logs_to_gcs.sh
+    dest: ~/upload_logs_to_gcs.sh
+    mode: a+x
+  tags: [http-server]
+
+- name: Create a cronjob that saves logs every 5 min "*/5 * * * *"
+  ansible.builtin.cron:
+    name: "Save logs"
+    minute: "*/5"
+    hour: "*"
+    job: ~/upload_logs_to_gcs.sh >> ~/upload_logs_to_gcs.logs
+  tags: [http-server]

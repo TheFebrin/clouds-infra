@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service: 
+            name: website-with-db-ubuntu-qftdf
+            port:
+              number: 3000
+      - path: /v1
+        pathType: ImplementationSpecific
+        backend:
+          service: 
+            name: website-with-db-ubuntu-qftdf
+            port:
+              number: 3000
+      - path: /tmp/*
+        pathType: ImplementationSpecific
+        backend:
+          service: 
+            name: website-with-db-ubuntu-qftdf
+            port:
+              number: 3000
+      - path: /read
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: website-with-db-ubuntu-5b9hj
+            port:
+              number: 2137
+      - path: /readd
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: website-with-db-ubuntu-5b9hj
+            port:
+              number: 3000

@@ -1,0 +1,7 @@
+---
+# handlers file for disable_pass_auth
+
+- name: Restart SSH
+  service:
+    name: ssh
+    state: restarted

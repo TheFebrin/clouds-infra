@@ -1,0 +1,6 @@
+---
+project: dockers
+desc: build dockers
+discover:
+  - nginx.yml
+  - haproxy.yml
