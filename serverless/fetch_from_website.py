@@ -1,4 +1,6 @@
 import bs4
+import datetime
+from google.cloud import firestore
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
@@ -26,12 +28,24 @@ def get_data_from_table(table):
     data = []
     for element in table:
         try:
-            data.append(element.text)
+            if len(new_entry := element.text.strip()) > 0:
+                data.append(new_entry)
         except:
             pass
-    return data[:15]
+    final_data = data[:15]
 
-def main():
+    # Handle different data displayed on the website
+    if final_data[-3] == 'Europe' or final_data[-1].find(',') == -1:
+        final_data.insert(3, '0')
+        final_data.insert(5, '0')
+        final_data.insert(7, '0')
+
+    return final_data[:15]
+
+def main(_request):
+    if _request is not None:
+        print('Got request: ', _request.get_json(), _request.args)
+
     req = Request(URL, headers=hdr)
     html = urlopen(req)
     soup = BeautifulSoup(html, "html.parser")
@@ -47,6 +61,7 @@ def main():
         }
     else:
         polish_data = get_data_from_table(polish_table)
+        print(f'polish_data: {polish_data}')
         data_dict = {
             'all_cases': int(global_data[0].replace(',', '')),
             'deaths': int(global_data[1].replace(',', '')),
@@ -71,7 +86,22 @@ def main():
 
     
     print(data_dict)
+    date: str = datetime.datetime.utcnow().strftime("%y-%m-%d-%H-%M-%S")
+    print(f'Saving file: {date}')
+    db = firestore.Client()
+    doc_ref = db.collection('covid-data').document(date)
+    doc_ref.set(data_dict)
 
+    return 'DONE'
+
+
+def display_data_from_db():
+    db = firestore.Client()
+    data_ref = db.collection(u'covid-data')
+
+    for doc in data_ref.stream():
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
 
 if __name__ == '__main__':
-    main()
+    # display_data_from_db()
+    main(None)
